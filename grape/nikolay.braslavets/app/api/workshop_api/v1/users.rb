@@ -12,23 +12,21 @@ module WorkshopApi
           entity = User.new(declared_params[:user])
 
           if entity.save
-            present :token, 'sadsadsadsadas'
-            present :entity, entity,
-                    with: WorkshopApi::Entities::UserEntity::Me
+            present :entity, entity, with: WorkshopApi::Entities::UserEntity::Me
           else
-             error!(entity.errors.messages, 422)
+            error!(entity.errors.messages, 422)
           end
-          #binding.pry
         end
+        before { authenticate }
         namespace :me do
-          get :me do
-            # current_user
+          get do
+            present :entity, current_user, with: WorkshopApi::Entities::UserEntity::Me
           end
 
           params do
 
           end
-          put :me do
+          put do
 
           end
         end

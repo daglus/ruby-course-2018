@@ -1,11 +1,17 @@
 class User < ApplicationRecord
-  EMAIL_REGEXP = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
+  EMAIL_REGEXP = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/.freeze
 
-  has_secure_password
+  authenticates_with_sorcery!
 
-  validates :email, presence: true,
+  has_many :credentials, dependent: :destroy
+
+  validates :email,
+            presence: true,
             uniqueness: true,
             format: EMAIL_REGEXP
 
-  has_many :credentials, dependent: :destroy
+  def auth_token
+    payload = { user_id: id }
+    JWT.encode payload, Rails.application.secrets.secret_key_base, 'HS256'
+  end
 end

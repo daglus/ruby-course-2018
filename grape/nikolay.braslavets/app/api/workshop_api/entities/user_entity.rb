@@ -8,9 +8,7 @@ module WorkshopApi
       end
 
       class Me < Base
-        expose :some_secret_date do |_|
-          'Im secret data'
-        end
+        # expose :some_secret_data, &:secret_data
       end
     end
   end
